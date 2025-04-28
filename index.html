@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestor de Finanças</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --card-dark: #1e1e1e;
+            --primary: #9b59b6;
+            --accent: #8e44ad;
+            --text: #e0e0e0;
+            --text-muted: #bbbbbb;
+            --danger: #e74c3c;
+            --success: #2ecc71;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text);
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--card-dark);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(155, 89, 182, 0.2);
+        }
+
+        .form-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input,
+        select,
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        input,
+        select {
+            background: #2b2b2b;
+            color: var(--text);
+            flex: 1;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--accent);
+        }
+
+        .resumo {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #2b2b2b;
+            border-radius: 8px;
+        }
+
+        .resumo p {
+            margin: 5px 0;
+        }
+
+        .positivo {
+            color: var(--success);
+        }
+
+        .negativo {
+            color: var(--danger);
+        }
+
+        .mes-section {
+            margin-top: 30px;
+        }
+
+        .mes-titulo {
+            margin-bottom: 10px;
+            color: var(--accent);
+            font-size: 1.3rem;
+            display: flex;
+            justify-content: space-between;
+            /* Isso garante que o conteúdo seja distribuído e o botão vá para a extrema direita */
+            align-items: center;
+            /* Alinha o conteúdo verticalmente */
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            background-color: #292929;
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .item span {
+            max-width: 40%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .graficos {
+            margin-top: 40px;
+        }
+
+        canvas {
+            background-color: #1b1b1b;
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 30px;
+        }
+
+        .sb {
+            background-color: var(--fundo-claro);
+            height: 100vh;
+            width: 60px;
+            transition: width 0.3s ease;
+            overflow: hidden;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+
+        .sb.exp {
+            width: 200px;
+        }
+
+        .sb-toggle {
+            background-color: var(--roxo);
+            cursor: pointer;
+            padding: 1rem;
+            text-align: center;
+            color: white;
+        }
+
+        .sb-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .sb-item:hover {
+            background-color: #333;
+        }
+
+        .sb-icon {
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .sb-text {
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sb.exp .sb-text {
+            opacity: 1;
+        }
+
+        .mc {
+            margin-left: 60px;
+            padding: 2rem;
+            transition: margin-left 0.3s ease;
+            width: 100%;
+        }
+
+        .sb.exp~.mc {
+            margin-left: 200px;
+        }
+
+        #graficoPizza {
+            position: fixed;
+            bottom: 5px;
+            right: 20px;
+            max-width: 200px;
+            max-height: 200px;
+            background-color: #1a1a1a;
+            /* opcional, caso queira um fundo */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            /* para ficar acima de tudo */
+        }
+
+        #graficoBarras {
+            max-width: 1200px;
+            max-height: 450px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sb" id="sb">
+        <div class="sb-toggle" onclick="toggleSidebar()">☰
+            <span class="sb-text">Menu</span>
+        </div>
+        <div class="sb-item" onclick="scrollToSection('adicionar')">
+            <span class="sb-icon">➕</span>
+            <span class="sb-text">Adicionar</span>
+        </div>
+        <div class="sb-item" onclick="scrollToSection('financeiro')">
+            <span class="sb-icon">📄</span>
+            <span class="sb-text">Lançamentos</span>
+        </div>
+        <div class="sb-item" onclick="scrollToSection('graficos')">
+            <span class="sb-icon">📊</span>
+            <span class="sb-text">Relatórios</span>
+        </div>
+    </div>
+
+
+    <h1>Gestor de Finanças</h1>
+
+    <div class="container">
+        <div class="form-group">
+            <input type="text" id="descricao" placeholder="Descrição" />
+            <input type="number" id="valor" placeholder="Valor" />
+            <select id="tipo">
+                <option value="receita">Receita</option>
+                <option value="despesa">Despesa</option>
+            </select>
+
+            <select id="categoria">
+                <option value="Banco">Banco</option>
+                <option value="Cheque Especial">Cheque Especial</option>
+                <option value="Fatura">Fatura</option>
+                <option value="Necessidades">Necessidades</option>
+                <option value="Contas">Contas</option>
+                <option value="Besteira">Besteira</option>
+                <option value="Juros">Juros</option>
+                <option value="Investimento">Investimento</option>
+                <option value="Gasolina">Gasolina</option>
+                <option value="Assinaturas">Assinaturas</option>
+                <option value="Roupas">Roupas</option>
+            </select>
+            <select id="mes">
+                <option value="Janeiro">Janeiro</option>
+                <option value="Fevereiro">Fevereiro</option>
+                <option value="Março">Março</option>
+                <option value="Abril">Abril</option>
+                <option value="Maio">Maio</option>
+                <option value="Junho">Junho</option>
+                <option value="Julho">Julho</option>
+                <option value="Agosto">Agosto</option>
+                <option value="Setembro">Setembro</option>
+                <option value="Outubro">Outubro</option>
+                <option value="Novembro">Novembro</option>
+                <option value="Dezembro">Dezembro</option>
+            </select>
+            <button onclick="adicionar()">Adicionar</button>
+        </div>
+
+        <div id="resumoTotal" class="resumo">
+            <p><strong>Total Geral:</strong> R$ <span id="totalGeral">0.00</span></p>
+        </div>
+        <br>
+        <br>
+        <div id="financeiro"></div>
+
+        <div class="graficos" id="graficos">
+            <canvas id="graficoBarras" width="250" height="250"></canvas>
+            <canvas id="graficoPizza" width="250" height="250"></canvas>
+        </div>
+    </div>
+
+
+    <!-- Mesma estrutura do código anterior, só o script final foi modificado -->
+
+    <script>
+        const dados = JSON.parse(localStorage.getItem
+        ("dadosFinanceiros")) || {};
+        let graficoBarras, graficoPizza;
+        
+        function toggleSidebar() {
+            document.getElementById('sb').classList.toggle('exp');
+        }
+        
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function adicionar() {
+            const descricao = document.getElementById('descricao').value.trim();
+            const valor = parseFloat(document.getElementById('valor').value);
+            const tipo = document.getElementById('tipo').value;
+            const mes = document.getElementById('mes').value;
+            const categoria = tipo === 'despesa' ? document.getElementById('categoria').value : '';
+        
+            if (!descricao || isNaN(valor) || valor <= 0) {
+                alert("Preencha todos os campos corretamente.");
+                return;
+            }
+        
+            if (!dados[mes]) dados[mes] = [];
+        
+            const item = { descricao, valor, tipo };
+            if (tipo === 'despesa' && categoria) {
+                item.categoria = categoria;
+            }
+        
+            dados[mes].push(item);
+            document.getElementById('descricao').value = '';
+            document.getElementById('valor').value = '';
+            document.getElementById('categoria').value = ''; 
+            salvarDados();
+            renderizar();
+        }
+        
+        function salvarDados() {
+            localStorage.setItem("dadosFinanceiros", JSON.stringify(dados));
+        }
+        
+        function removerItem(mes, index) {
+            dados[mes].splice(index, 1);
+            if (dados[mes].length === 0) delete dados[mes];
+            salvarDados();
+            renderizar();
+        }
+        
+        function editarItem(mes, index) {
+            const item = dados[mes][index];
+            const novaDescricao = prompt("Editar descrição:", item.descricao);
+            const novoValor = prompt("Editar valor:", item.valor);
+            const novoTipo = prompt("Editar tipo (receita/despesa):", item.tipo);
+        
+            if (novaDescricao && !isNaN(parseFloat(novoValor)) && (novoTipo === 'receita' || novoTipo === 'despesa')) {
+                dados[mes][index] = {
+                    descricao: novaDescricao,
+                    valor: parseFloat(novoValor),
+                    tipo: novoTipo
+                };
+                if (novoTipo === 'despesa') {
+                    const novaCategoria = prompt("Editar categoria (Banco, Cheque Especial, Fatura, Necessidades, Besteiras, Outros):", item.categoria);
+                    dados[mes][index].categoria = novaCategoria;
+                }
+                salvarDados();
+                renderizar();
+            } else {
+                alert("Edição cancelada ou inválida.");
+            }
+        }
+        
+        function renderizar() {
+            const container = document.getElementById('financeiro');
+            const totalGeralSpan = document.getElementById('totalGeral');
+            container.innerHTML = '';
+        
+            let totalGeral = 0;
+            let saldosMes = [];
+            let labels = [];
+        
+            let totalReceita = 0;
+            let totalDespesa = 0;
+        
+            // Botões dos meses
+            const mesesContainer = document.createElement('div');
+            mesesContainer.classList.add('meses-container');
+            mesesContainer.style.display = 'flex';
+            mesesContainer.style.justifyContent = 'center';
+            mesesContainer.style.alignItems = 'center';
+            mesesContainer.style.flexWrap = 'wrap';
+            mesesContainer.style.marginBottom = '20px';
+        
+            Object.keys(dados).forEach(mes => {
+                const mesButton = document.createElement('button');
+                mesButton.innerText = mes;
+                mesButton.style.fontSize = '14px';
+                mesButton.style.padding = '8px 16px';
+                mesButton.style.margin = '5px';
+                mesButton.style.cursor = 'pointer';
+                mesButton.onclick = () => toggleMes(mes);
+                mesesContainer.appendChild(mesButton);
+            });
+        
+            container.appendChild(mesesContainer);
+        
+            // Seções dos meses
+            const sections = {};
+        
+            Object.keys(dados).forEach(mes => {
+                const section = document.createElement('div');
+                section.classList.add('mes-section');
+                section.style.display = 'none';
+                sections[mes] = section;
+        
+                const titulo = document.createElement('div');
+                titulo.classList.add('mes-titulo');
+                titulo.innerText = mes;
+        
+                const itemsContainer = document.createElement('div');
+                itemsContainer.classList.add('itens-container');
+                itemsContainer.style.display = 'block';
+        
+                let totalMes = 0;
+                let saldosPorCategoria = {};
+        
+                dados[mes].forEach((item, index) => {
+                    const linha = document.createElement('div');
+                    linha.classList.add('item');
+                    linha.innerHTML = `
+                        <div style="display: flex; flex: 1; align-items: center; justify-content: space-between; margin-right: 10px;">
+                            <span>${item.descricao} ${item.tipo === 'despesa' ? `(${item.categoria || 'Não especificada'})` : ''}</span>
+                            <span class="${item.tipo === 'receita' ? 'positivo' : 'negativo'}">
+                                ${item.tipo === 'receita' ? '+' : '-'} R$ ${item.valor.toFixed(2)}
+                            </span>
+                        </div>
+                        <div>
+                            <button style="margin-right: 10px;" onclick="editarItem('${mes}', ${index})">✏️</button>
+                            <button onclick="removerItem('${mes}', ${index})">🗑️</button>
+                        </div>
+                    `;
+                    linha.style.display = "flex";
+                    linha.style.alignItems = "center";
+                    linha.style.justifyContent = "space-between";
+                    linha.querySelector("div").style.display = "flex";
+        
+                    itemsContainer.appendChild(linha);
+        
+                    totalMes += item.tipo === 'receita' ? item.valor : -item.valor;
+        
+                    if (item.tipo === 'receita') totalReceita += item.valor;
+                    if (item.tipo === 'despesa') totalDespesa += item.valor;
+        
+                    if (item.tipo === 'despesa') {
+                        const nomeCategoria = item.categoria || 'Não especificada';
+                        if (!saldosPorCategoria[nomeCategoria]) {
+                            saldosPorCategoria[nomeCategoria] = 0;
+                        }
+                        saldosPorCategoria[nomeCategoria] += item.valor;
+                    }
+                });
+        
+                section.appendChild(titulo);
+                section.appendChild(itemsContainer);
+        
+                // Adicionando saldo por categoria (antes do resumo!)
+                const categoriasContainer = document.createElement('div');
+                categoriasContainer.classList.add('categorias-container');
+                categoriasContainer.style.marginTop = '15px';
+                categoriasContainer.style.marginBottom = '15px';
+                categoriasContainer.style.textAlign = 'center';
+        
+                if (Object.keys(saldosPorCategoria).length > 0) {
+                    const tituloCategorias = document.createElement('p');
+                    tituloCategorias.innerHTML = '<strong>Total por Categoria:</strong>';
+                    categoriasContainer.appendChild(tituloCategorias);
+        
+                    for (let nomeCategoria in saldosPorCategoria) {
+                        const divCategoria = document.createElement('div');
+                        divCategoria.classList.add('categoria');
+                        divCategoria.innerHTML = `
+                            <p>${nomeCategoria}: R$ ${saldosPorCategoria[nomeCategoria].toFixed(2)}</p>`;
+                        categoriasContainer.appendChild(divCategoria);
+                    }
+        
+                    section.appendChild(categoriasContainer);
+                }
+        
+                // Resumo do saldo do mês
+                const resumo = document.createElement('div');
+                resumo.classList.add('resumo');
+                resumo.innerHTML = `
+                    <p><strong>Saldo de ${mes}:</strong> 
+                    <span class="${totalMes >= 0 ? 'positivo' : 'negativo'}">R$ ${totalMes.toFixed(2)}</span></p>`;
+                resumo.style.justifyContent = "center";
+                resumo.style.alignItems = "center";
+                resumo.style.textAlign = "center";
+                resumo.style.fontSize = "20px";
+                section.appendChild(resumo);
+        
+                saldosMes.push(totalMes);
+                labels.push(mes);
+        
+                totalGeral += totalMes;
+        
+                container.appendChild(section);
+            });
+        
+            if (totalGeralSpan) {
+                totalGeralSpan.innerText = `R$ ${totalGeral.toFixed(2)}`;
+            }
+        
+            if (typeof atualizarGraficos === "function") {
+                atualizarGraficos(labels, saldosMes, totalReceita, totalDespesa);
+            }
+        }
+        
+        function atualizarGraficos(labels, saldos, receitas, despesas) {
+            const ctxBarra = document.getElementById('graficoBarras').getContext('2d');
+            const ctxPizza = document.getElementById('graficoPizza').getContext('2d');
+        
+            if (graficoBarras) graficoBarras.destroy();
+            if (graficoPizza) graficoPizza.destroy();
+        
+            graficoBarras = new Chart(ctxBarra, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Saldo por Mês',
+                        data: saldos,
+                        backgroundColor: saldos.map(v => v >= 0 ? '#2ecc71' : '#e74c3c')
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { labels: { color: 'white' } }
+                    },
+                    scales: {
+                        x: { ticks: { color: 'white' } },
+                        y: { ticks: { color: 'white' } }
+                    }
+                }
+            });
+        
+            graficoPizza = new Chart(ctxPizza, {
+                type: 'pie',
+                data: {
+                    labels: ['Receitas', 'Despesas'],
+                    datasets: [{
+                        data: [receitas, despesas],
+                        backgroundColor: ['#2ecc71', '#e74c3c']
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: { labels: { color: 'white' } }
+                    }
+                }
+            });
+        }
+        
+        function toggleMes(mesSelecionado) {
+    const secoes = document.querySelectorAll('.mes-section');
+    secoes.forEach(secao => {
+        secao.style.display = 'none';
+    });
+
+    const secaoSelecionada = document.querySelector(`.mes-section:nth-child(${Object.keys(dados).indexOf(mesSelecionado) + 2})`);
+    if (secaoSelecionada) {
+        secaoSelecionada.style.display = 'block';
+        secaoSelecionada.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+        renderizar();
+        </script>
+    
+    
+
+
+</body>
+
+</html>
