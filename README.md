@@ -37,9 +37,16 @@ Sistema simples e eficiente para controle financeiro pessoal ou empresarial, 100
 - **Gráfico de Barras:** Exibe o saldo de cada mês.
 - **Gráfico de Pizza:** Mostra a proporção entre Receitas e Despesas totais.
 
-## 📂 Estrutura do Projeto
-```plaintext
-Gestor de Finanças/
-│
-├── index.html      # Código principal
-└── (usa CDN para Chart.js)
+
+## 🧑‍💻 Desenvolvido por
+
+**Freitas Fzw**  
+🔗 [github.com/freitasfzw](https://github.com/freitasfzw)
+
+---
+
+### ⚠️ Licença e Uso
+
+Este projeto é de uso **exclusivamente pessoal** e **não pode ser redistribuído, copiado, comercializado ou disponibilizado por terceiros**, total ou parcialmente, sem autorização expressa do autor.
+
+---
