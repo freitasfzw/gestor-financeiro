@@ -1,5 +1,4 @@
 # Gerar o conteúdo em formato .md conforme solicitado
-readme_content = """
 # 📊 Gestor de Finanças
 Sistema simples e eficiente para controle financeiro pessoal ou empresarial, 100% local (salvando os dados no navegador via localStorage) e com visual moderno e tema escuro.
 
