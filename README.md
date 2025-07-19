@@ -11,20 +11,7 @@ Sistema simples e eficiente para controle financeiro pessoal ou empresarial, 100
 - 🧠 Salvamento Automático no navegador (localStorage).
 
 ## 🚀 Como Usar
-1. Abra o arquivo `index.html` em seu navegador.
-2. Use a barra lateral para navegar entre:
-   - Adicionar novos lançamentos
-   - Visualizar lançamentos e resumos
-   - Acessar os relatórios gráficos
-3. Adicione uma nova entrada preenchendo:
-   - Descrição
-   - Valor
-   - Tipo (Receita ou Despesa)
-   - Categoria (para despesas)
-   - Mês correspondente
-4. Edite ou Remova itens clicando nos ícones ✏️ ou 🗑️.
-
-**Observação:** Todos os dados ficam salvos no localStorage do navegador! Não é necessário banco de dados externo.
+Projeto em JavaScript/HTML/CSS Totalmente voltado para um Aplicativo Android, no momento, somente a beta está disponivel.
 
 ## 🖥️ Tecnologias Utilizadas
 - HTML5
