@@ -5,250 +5,162 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestor de Finanças</title>
+    <link rel="stylesheet" href="styles/android.css" />
+    <link rel="icon" type="image/png" sizes="280x280" href="img/logo.png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-dark: #121212;
-            --card-dark: #1e1e1e;
-            --primary: #9b59b6;
-            --accent: #8e44ad;
-            --text: #e0e0e0;
-            --text-muted: #bbbbbb;
-            --danger: #e74c3c;
-            --success: #2ecc71;
+            --bg: #f0f2f5;
+            --card: #ffffff;
+            --primary: #b300ff;
+            --text: #222222;
+            --text-muted: #666666;
+            --border: #dddddd;
+            --success: #4ed60f;
+            --danger: #ff0000;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text);
-            padding: 40px 20px;
-        }
-
-        h1 {
-            text-align: center;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: var(--card-dark);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 0 15px rgba(155, 89, 182, 0.2);
-        }
-
-        .form-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        input,
-        select,
-        button {
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-        }
-
-        input,
-        select {
-            background: #2b2b2b;
-            color: var(--text);
-            flex: 1;
-        }
-
-        button {
-            background-color: var(--primary);
-            color: #fff;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        button:hover {
-            background-color: var(--accent);
-        }
-
-        .resumo {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #2b2b2b;
-            border-radius: 8px;
-        }
-
-        .resumo p {
-            margin: 5px 0;
-        }
-
-        .positivo {
-            color: var(--success);
-        }
-
-        .negativo {
-            color: var(--danger);
-        }
-
-        .mes-section {
-            margin-top: 30px;
-        }
-
-        .mes-titulo {
-            margin-bottom: 10px;
-            color: var(--accent);
-            font-size: 1.3rem;
-            display: flex;
-            justify-content: space-between;
-            /* Isso garante que o conteúdo seja distribuído e o botão vá para a extrema direita */
-            align-items: center;
-            /* Alinha o conteúdo verticalmente */
-        }
-
-        .item {
-            display: flex;
-            justify-content: space-between;
-            background-color: #292929;
-            padding: 8px 12px;
-            margin-bottom: 6px;
-            border-radius: 6px;
-            font-size: 0.95rem;
-        }
-
-        .item span {
-            max-width: 40%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .graficos {
-            margin-top: 40px;
-        }
-
-        canvas {
-            background-color: #1b1b1b;
-            border-radius: 12px;
-            padding: 10px;
-            margin-bottom: 30px;
-        }
-
-        .sb {
-            background-color: var(--fundo-claro);
-            height: 100vh;
-            width: 60px;
-            transition: width 0.3s ease;
-            overflow: hidden;
-            position: fixed;
-            left: 0;
-            top: 0;
-            z-index: 10;
-        }
-
-        .sb.exp {
-            width: 200px;
-        }
-
-        .sb-toggle {
-            background-color: var(--roxo);
-            cursor: pointer;
-            padding: 1rem;
-            text-align: center;
-            color: white;
-        }
-
-        .sb-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .sb-item:hover {
-            background-color: #333;
-        }
-
-        .sb-icon {
-            margin-right: 1rem;
-            font-size: 1.2rem;
-        }
-
-        .sb-text {
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .sb.exp .sb-text {
-            opacity: 1;
-        }
-
-        .mc {
-            margin-left: 60px;
-            padding: 2rem;
-            transition: margin-left 0.3s ease;
-            width: 100%;
-        }
-
-        .sb.exp~.mc {
-            margin-left: 200px;
-        }
-
-        #graficoPizza {
-            position: fixed;
-            bottom: 5px;
-            right: 20px;
-            max-width: 200px;
-            max-height: 200px;
-            background-color: #1a1a1a;
-            /* opcional, caso queira um fundo */
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            z-index: 9999;
-            /* para ficar acima de tudo */
-        }
-
-        #graficoBarras {
-            max-width: 1200px;
-            max-height: 450px;
+        body.dark {
+            --bg: #121212;
+            --card: #1c1c1e;
+            --primary: #9500ff;
+            --text: #f0f0f0;
+            --text-muted: #999999;
+            --border: #2a2a2a;
+            --success: #b300ff;
+            --danger: #ff0000;
         }
     </style>
 </head>
 
 <body>
+    <!--! WELCOMESCREEN -->
+    <div id="fz-welcomeScreen-container" class="fz-welcomeScreen-container">
+        <div class="fz-welcomeScreen-slides">
+            <div class="fz-welcomeScreen-slide">
+                <img style="animation: fz-pulsar 3s infinite ease-in-out;" class="fz-welcomeScreen-img fz-fade-in"
+                    src="img/logo1.png" alt="">
+                <h2 class="fz-fade-in">Bem-vindo ao Finanze</h2>
+                <p class="fz-fade-in">O primeiro passo para pôr sua vida financeira nos trilhos.</p>
+            </div>
+            <div class="fz-welcomeScreen-slide">
+                <h2 class="fz-fade-in">Receitas e Despesas</h2>
+                <img class="fz-welcomeScreen-img fz-fade-in" src="img/organizacao1-welcomePNG.png" alt="">
+                <p class="fz-fade-in">Registrar e controlar receitas e despesas é essencial para manter a saúde
+                    financeira e planejar melhor.</p>
+            </div>
+            <div class="fz-welcomeScreen-slide">
+                <h2 class="fz-fade-in">Gráficos Visuais</h2>
+                <img class="fz-welcomeScreen-img fz-fade-in" src="img/organizao3.png" alt="">
+                <p class="fz-fade-in">Veja seu saldo em gráficos interativos que atualizam em tempo real.</p>
+            </div>
+            <div class="fz-welcomeScreen-slide">
+                <h2 class="fz-fade-in">Vamos Começar!</h2>
+                <img class="fz-welcomeScreen-img fz-fade-in" src="img/orfganizacao2.png" alt="">
+                <p class="fz-fade-in">Toque em Começar e dê o primeiro passo para um futuro financeiro organizado.</p>
+                <input id="fz-nomeUsuario" class="fz-fade-in" type="text" placeholder="Digite seu primeiro nome"
+                    style="margin-top: 15px; padding: 10px; font-size: 16px; width: 80%; max-width: 300px; text-align: center; border-radius: 8px; border: 1px solid var(--border);">
+            </div>
+        </div>
 
-    <div class="sb" id="sb">
-        <div class="sb-toggle" onclick="toggleSidebar()">☰
-            <span class="sb-text">Menu</span>
-        </div>
-        <div class="sb-item" onclick="scrollToSection('adicionar')">
-            <span class="sb-icon">➕</span>
-            <span class="sb-text">Adicionar</span>
-        </div>
-        <div class="sb-item" onclick="scrollToSection('financeiro')">
-            <span class="sb-icon">📄</span>
-            <span class="sb-text">Lançamentos</span>
-        </div>
-        <div class="sb-item" onclick="scrollToSection('graficos')">
-            <span class="sb-icon">📊</span>
-            <span class="sb-text">Relatórios</span>
+        <div id="fz-welcomeScreen-indicators" class="fz-welcomeScreen-indicators"></div>
+
+        <div class="fz-welcomeScreen-navigation">
+            <button id="fz-welcomeScreen-btnNext" onclick="fzWelcome_navegarSlide(1)">Próximo</button>
+            <button id="fz-welcomeScreen-btnStart" onclick="fzWelcome_fechar()">Começar!</button>
         </div>
     </div>
 
+    <!--! SIZEBAR -->
+    <div class="sb" id="sb">
+        <div class="sb-item" data-target="incio" onclick="mostrarSecao('inicio')">
+            <span class="sb-icon">
+                <img class="sb-icon-png" src="img/list.png" data-icon-light="img/list.png"
+                    data-icon-dark="img/list-black.png" alt="">
+            </span>
+        </div>
+        <div class="sb-item" data-target="adicionar" onclick="mostrarSecao('adicionar')">
+            <span class="sb-icon">
+                <img class="sb-icon-png" src="img/cash.png" data-icon-light="img/cash.png"
+                    data-icon-dark="img/cash-black.png" alt="">
+            </span>
+        </div>
+        <div class="sb-item" data-target="financeiro" onclick="mostrarSecao('financeiro')">
+            <span class="sb-icon">
+                <img class="sb-icon-png" src="img/money-bag.png" data-icon-light="img/money-bag.png"
+                    data-icon-dark="img/money-bag-black.png" alt="">
+            </span>
+        </div>
+        <div class="sb-item" data-target="graficos" onclick="mostrarSecao('graficos')">
+            <span class="sb-icon">
+                <img class="sb-icon-png" src="img/line-chart.png" data-icon-light="img/line-chart.png"
+                    data-icon-dark="img/line-chart-black.png" alt="">
+            </span>
+        </div>
+        <div class="sb-item" data-target="configuration" onclick="mostrarSecao('configuration')">
+            <span class="sb-icon">
+                <img class="sb-icon-png" src="img/settings.png" data-icon-light="img/settings.png"
+                    data-icon-dark="img/settings-black.png" alt="">
+            </span>
+        </div>
+    </div>
 
-    <h1>Gestor de Finanças</h1>
+    <!--! TITLE -->
+    <div class="title">
+        <img class="title-img" src="img/finanzelogo.png" alt="FinanzeApp">
+    </div>
 
-    <div class="container">
+    <!--! INCIO -->
+    <div id="inicio" class="container secao" style="padding: 20px; max-width: 900px; margin: auto;">
+
+        <h1 style="text-align:center; margin-bottom: 10px;">Olá, <span id="nomeUsuarioDisplay">Usuário</span>!</h1>
+        <p style="text-align:center; font-size: 1.1rem; color: var(--text-muted); margin-bottom: 30px;">
+            Veja um resumo da sua vida financeira e dicas para melhorar seus resultados.
+        </p>
+
+        <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; margin-bottom: 40px;">
+            <div
+                style="background: var(--card); padding: 20px; border-radius: 12px; flex: 1 1 250px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+                <h3>Total Receitas</h3>
+                <p id="totalReceitasDashboard" style="font-size: 2rem; font-weight: bold; color: var(--success);">R$
+                    0,00</p>
+            </div>
+            <div
+                style="background: var(--card); padding: 20px; border-radius: 12px; flex: 1 1 250px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+                <h3>Total Despesas</h3>
+                <p id="totalDespesasDashboard" style="font-size: 2rem; font-weight: bold; color: var(--danger);">R$ 0,00
+                </p>
+            </div>
+            <div
+                style="background: var(--card); padding: 20px; border-radius: 12px; flex: 1 1 250px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+                <h3>Saldo</h3>
+                <p id="saldoDashboard" style="font-size: 2rem; font-weight: bold; color: var(--primary);">R$ 0,00</p>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 40px; flex-wrap: wrap; justify-content: center; margin-bottom: 40px;">
+            <canvas id="graficoBarrasDashboard"
+                style="max-width: 420px; background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);"></canvas>
+            <canvas id="graficoPizzaDashboard"
+                style="max-width: 320px; background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);"></canvas>
+        </div>
+
+        <section id="dicasFinanceiras"
+            style="background: var(--card); border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h2 style="margin-bottom: 15px; text-align: center;">Dicas para sua Saúde Financeira 💡</h2>
+            <ul
+                style="list-style: none; padding: 0; font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin: auto;">
+                <li style="margin-bottom: 12px;">✔️ Mantenha seu orçamento mensal sempre atualizado.</li>
+                <li style="margin-bottom: 12px;">✔️ Controle suas despesas para evitar gastos desnecessários.</li>
+                <li style="margin-bottom: 12px;">✔️ Faça reservas de emergência, mesmo que pequenas.</li>
+                <li style="margin-bottom: 12px;">✔️ Use seus gráficos para visualizar seu progresso.</li>
+                <li style="margin-bottom: 12px;">✔️ Revise seus gastos todo mês e ajuste suas metas.</li>
+            </ul>
+        </section>
+    </div>
+
+    <!--! ADICIONAR -->
+    <div class="container secao" id="adicionar">
         <div class="form-group">
             <input type="text" id="descricao" placeholder="Descrição" />
             <input type="number" id="valor" placeholder="Valor" />
@@ -286,179 +198,392 @@
             </select>
             <button onclick="adicionar()">Adicionar</button>
         </div>
+    </div>
 
+    <!--! FINANCEIRO -->
+    <div class="container secao" id="financeiro">
         <div id="resumoTotal" class="resumo">
             <p><strong>Total Geral:</strong> R$ <span id="totalGeral">0.00</span></p>
         </div>
-        <br>
-        <br>
-        <div id="financeiro"></div>
+        <br />
+        <br />
+        <div id="financeiroDados"></div> <!-- container para itens financeiros gerados via JS -->
+    </div>
 
-        <div class="graficos" id="graficos">
-            <canvas id="graficoBarras" width="250" height="250"></canvas>
-            <canvas id="graficoPizza" width="250" height="250"></canvas>
+    <!--! Graficos -->
+    <div class="container secao" id="graficos">
+        <canvas id="graficoBarras" width="250" height="250"></canvas>
+        <canvas id="graficoPizza" width="250" height="250"></canvas>
+    </div>
+
+    <!--! Configuração -->
+    <div class="fz-settings container secao" id="configuration">
+        <h2 class="fz-settings-title">Configurações</h2>
+
+        <div class="fz-settings-section">
+            <h3>Aparência</h3>
+            <button id="toggleTema" class="fz-settings-btn">Alternar Tema</button>
+        </div>
+
+        <div class="fz-settings-section">
+            <h3>Dados</h3>
+            <button class="fz-settings-btn">Exportar Dados</button>
+            <button class="fz-settings-btn">Apagar Tudo</button>
+        </div>
+
+        <div class="fz-settings-section">
+            <h3>Notificações</h3>
+            <label class="fz-settings-switch">
+                <input type="checkbox" id="notificacoesToggle">
+                <span class="fz-slider"></span>
+                Ativar lembretes
+            </label>
+        </div>
+
+        <div class="fz-settings-section">
+            <h3>Suporte</h3>
+            <button class="fz-settings-btn">Fale Conosco</button>
         </div>
     </div>
 
+    <!--! Editar Receitas/Despesas -->
+    <div id="modal-editar"
+        style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center;">
+        <div
+            style="background:var(--card); padding:20px; border-radius:12px; width:90%; max-width:400px; color:var(--text); display:flex; flex-direction:column; gap:10px;">
+            <h2 style="margin-bottom: 10px;">Editar Item</h2>
+            <input type="text" id="editar-descricao" placeholder="Descrição" />
+            <input type="number" id="editar-valor" placeholder="Valor" />
+            <select id="editar-tipo">
+                <option value="receita">Receita</option>
+                <option value="despesa">Despesa</option>
+            </select>
+            <select id="editar-categoria" style="display: none;">
+                <option value="Banco">Banco</option>
+                <option value="Cheque Especial">Cheque Especial</option>
+                <option value="Fatura">Fatura</option>
+                <option value="Necessidades">Necessidades</option>
+                <option value="Contas">Contas</option>
+                <option value="Besteira">Besteira</option>
+                <option value="Juros">Juros</option>
+                <option value="Investimento">Investimento</option>
+                <option value="Gasolina">Gasolina</option>
+                <option value="Assinaturas">Assinaturas</option>
+                <option value="Roupas">Roupas</option>
+            </select>
+            <div style="display:flex; gap:10px; justify-content:flex-end;">
+                <button onclick="fecharModalEdicao()" style="background:gray;">Cancelar</button>
+                <button onclick="salvarEdicao()" style="background:var(--primary);">Salvar</button>
+            </div>
+        </div>
+    </div>
 
-    <!-- Mesma estrutura do código anterior, só o script final foi modificado -->
+    <!--! PopUp -->
+    <div id="popup" class="popup"></div>
 
+    <!--! SCRIPT -->
     <script>
-        const dados = JSON.parse(localStorage.getItem
-        ("dadosFinanceiros")) || {};
+        window.onload = () => {
+            mostrarSecao('inicio'); // Exibe a aba padrão ao carregar
+        };
+
+        const dados = JSON.parse(localStorage.getItem("dadosFinanceiros")) || {};
         let graficoBarras, graficoPizza;
-        
+        /*
+        Tema White/Dark   
+        */
+        function atualizarIconesSidebarTema() {
+            const icones = document.querySelectorAll('.sb-icon-png');
+            const modoEscuro = document.body.classList.contains('dark');
+
+            icones.forEach(icone => {
+                const src = modoEscuro ? icone.dataset.iconDark : icone.dataset.iconLight;
+                if (src) icone.src = src;
+            });
+        }
+
+        function aplicarTemaSalvo() {
+            const temaSalvo = localStorage.getItem('tema');
+            const btnTema = document.getElementById('toggleTema');
+
+            if (temaSalvo === 'dark') {
+                document.body.classList.add('dark');
+                btnTema.innerText = '☀️ Modo Claro';
+            } else {
+                document.body.classList.remove('dark');
+                btnTema.innerText = '🌙 Modo Escuro';
+            }
+
+            atualizarIconesSidebarTema(); // Atualiza ícones
+            renderizar();
+        }
+
+        document.getElementById('toggleTema').addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            const estaDark = document.body.classList.contains('dark');
+            localStorage.setItem('tema', estaDark ? 'dark' : 'light');
+            document.getElementById('toggleTema').innerText = estaDark ? '☀️ Modo Claro' : '🌙 Modo Escuro';
+
+            atualizarIconesSidebarTema(); // Atualiza ícones
+            renderizar();
+        });
+        /*
+        SB   
+        */
         function toggleSidebar() {
             document.getElementById('sb').classList.toggle('exp');
         }
-        
+
         function scrollToSection(id) {
             const el = document.getElementById(id);
             if (el) el.scrollIntoView({ behavior: 'smooth' });
         }
-        
+        /*
+        POPUP  
+        */
+        function mostrarPopup(mensagem) {
+            const popup = document.getElementById('popup');
+            popup.textContent = mensagem;
+            popup.classList.add('show');
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 1000); // duração: 3 segundos
+        }
+        /*
+        ADICIONAR ITEM  
+        */
         function adicionar() {
             const descricao = document.getElementById('descricao').value.trim();
             const valor = parseFloat(document.getElementById('valor').value);
             const tipo = document.getElementById('tipo').value;
             const mes = document.getElementById('mes').value;
             const categoria = tipo === 'despesa' ? document.getElementById('categoria').value : '';
-        
+
             if (!descricao || isNaN(valor) || valor <= 0) {
-                alert("Preencha todos os campos corretamente.");
+                mostrarPopup("Preencha todos os campos corretamente.");
                 return;
             }
-        
+
             if (!dados[mes]) dados[mes] = [];
-        
+
             const item = { descricao, valor, tipo };
-            if (tipo === 'despesa' && categoria) {
-                item.categoria = categoria;
+            if (tipo === 'despesa' && !categoria) {
+                mostrarPopup("Escolha uma categoria para a despesa.");
+                return;
             }
-        
+            if (tipo === 'despesa') item.categoria = categoria;
+
             dados[mes].push(item);
             document.getElementById('descricao').value = '';
             document.getElementById('valor').value = '';
-            document.getElementById('categoria').value = ''; 
+            document.getElementById('categoria').value = '';
             salvarDados();
             renderizar();
+
+            mostrarPopup(`Item de ${tipo === 'receita' ? 'Receita' : 'Despesa'} adicionado com sucesso!`);
         }
-        
+        /*
+        LOCALSTORAGE (dadosFinanceiros)
+        */
         function salvarDados() {
             localStorage.setItem("dadosFinanceiros", JSON.stringify(dados));
         }
-        
+        /*
+        EDITAR/REMOVER ITEM
+        */
         function removerItem(mes, index) {
             dados[mes].splice(index, 1);
             if (dados[mes].length === 0) delete dados[mes];
             salvarDados();
             renderizar();
+            mostrarPopup("Item removido com sucesso.");
         }
-        
+
         function editarItem(mes, index) {
             const item = dados[mes][index];
-            const novaDescricao = prompt("Editar descrição:", item.descricao);
-            const novoValor = prompt("Editar valor:", item.valor);
-            const novoTipo = prompt("Editar tipo (receita/despesa):", item.tipo);
-        
-            if (novaDescricao && !isNaN(parseFloat(novoValor)) && (novoTipo === 'receita' || novoTipo === 'despesa')) {
-                dados[mes][index] = {
-                    descricao: novaDescricao,
-                    valor: parseFloat(novoValor),
-                    tipo: novoTipo
-                };
-                if (novoTipo === 'despesa') {
-                    const novaCategoria = prompt("Editar categoria (Banco, Cheque Especial, Fatura, Necessidades, Besteiras, Outros):", item.categoria);
-                    dados[mes][index].categoria = novaCategoria;
-                }
-                salvarDados();
-                renderizar();
-            } else {
-                alert("Edição cancelada ou inválida.");
-            }
+            editarMesAtual = mes;
+            editarIndexAtual = index;
+
+            document.getElementById('editar-descricao').value = item.descricao;
+            document.getElementById('editar-valor').value = item.valor;
+            document.getElementById('editar-tipo').value = item.tipo;
+            document.getElementById('editar-categoria').value = item.categoria || '';
+
+            document.getElementById('editar-categoria').style.display = item.tipo === 'despesa' ? 'block' : 'none';
+            document.getElementById('modal-editar').style.display = 'flex';
         }
-        
+
+        function fecharModalEdicao() {
+            document.getElementById('modal-editar').style.display = 'none';
+            editarMesAtual = '';
+            editarIndexAtual = -1;
+        }
+
+        document.getElementById('editar-tipo').addEventListener('change', function () {
+            const categoria = document.getElementById('editar-categoria');
+            categoria.style.display = this.value === 'despesa' ? 'block' : 'none';
+        });
+
+        function salvarEdicao() {
+            const novaDescricao = document.getElementById('editar-descricao').value.trim();
+            const novoValor = parseFloat(document.getElementById('editar-valor').value);
+            const novoTipo = document.getElementById('editar-tipo').value;
+            const novaCategoria = document.getElementById('editar-categoria').value;
+
+            if (!novaDescricao || isNaN(novoValor) || (novoTipo !== 'receita' && novoTipo !== 'despesa')) {
+                mostrarPopup("Edição inválida.");
+                return;
+            }
+
+            const itemEditado = {
+                descricao: novaDescricao,
+                valor: novoValor,
+                tipo: novoTipo
+            };
+
+            if (novoTipo === 'despesa') {
+                itemEditado.categoria = novaCategoria;
+            }
+
+            dados[editarMesAtual][editarIndexAtual] = itemEditado;
+            salvarDados();
+            renderizar();
+            mostrarPopup("Item editado com sucesso.");
+            fecharModalEdicao();
+        }
+        /*
+        CARREGAR DADOS E RENDERIZAR
+        */
         function renderizar() {
             const container = document.getElementById('financeiro');
             const totalGeralSpan = document.getElementById('totalGeral');
+
+            // Limpa o conteúdo do container
             container.innerHTML = '';
-        
+
             let totalGeral = 0;
             let saldosMes = [];
             let labels = [];
-        
+
             let totalReceita = 0;
             let totalDespesa = 0;
-        
-            // Botões dos meses
+
+            // Verifica se há algum dado financeiro em algum mês
+            const meses = Object.keys(dados);
+            let temDados = false;
+            for (const mes of meses) {
+                if (dados[mes] && dados[mes].length > 0) {
+                    temDados = true;
+                    break;
+                }
+            }
+
+            if (!temDados) {
+                // Não há dados financeiros: mostra mensagem e zera total
+                container.innerHTML = `
+            <div style="text-align:center; font-size:1.4rem; color: var(--text-muted); margin-top: 40px;">
+                <strong>Não há registros!</strong>
+            </div>
+            <div id="resumoTotal" class="resumo" style="margin-top:20px;">
+                <p><strong>Total Geral:</strong> R$ <span id="totalGeral">0.00</span></p>
+            </div>
+        `;
+                // Atualiza o span totalGeral para 0.00 (precisa buscar após reinserir HTML)
+                const totalGeralSpanNovo = document.getElementById('totalGeral');
+                if (totalGeralSpanNovo) totalGeralSpanNovo.innerText = '0.00';
+
+                // Atualiza gráficos para vazio, se a função existir
+                if (typeof atualizarGraficos === "function") {
+                    atualizarGraficos([], [], 0, 0);
+                }
+
+                return; // encerra aqui
+            }
+
+            // --- Se tem dados, renderiza normalmente ---
+
+            // Estilizando os botões dos meses
             const mesesContainer = document.createElement('div');
             mesesContainer.classList.add('meses-container');
             mesesContainer.style.display = 'flex';
-            mesesContainer.style.justifyContent = 'center';
-            mesesContainer.style.alignItems = 'center';
             mesesContainer.style.flexWrap = 'wrap';
+            mesesContainer.style.justifyContent = 'center';
+            mesesContainer.style.gap = '10px';
             mesesContainer.style.marginBottom = '20px';
-        
-            Object.keys(dados).forEach(mes => {
+
+            meses.forEach(mes => {
                 const mesButton = document.createElement('button');
                 mesButton.innerText = mes;
                 mesButton.style.fontSize = '14px';
                 mesButton.style.padding = '8px 16px';
-                mesButton.style.margin = '5px';
+                mesButton.style.borderRadius = '8px';
+                mesButton.style.border = 'none';
+                mesButton.style.background = 'var(--primary)';
+                mesButton.style.color = 'white';
+                mesButton.style.boxShadow = '0 2px 6px rgba(0,0,0,0.2)';
                 mesButton.style.cursor = 'pointer';
+                mesButton.style.transition = 'background 0.3s';
+                mesButton.onmouseenter = () => mesButton.style.background = 'color-mix(in srgb, var(--primary) 80%, black)';
+                mesButton.onmouseleave = () => mesButton.style.background = 'var(--primary)';
                 mesButton.onclick = () => toggleMes(mes);
                 mesesContainer.appendChild(mesButton);
             });
-        
+
+            // Adiciona container de meses ao container principal
             container.appendChild(mesesContainer);
-        
-            // Seções dos meses
+
             const sections = {};
-        
-            Object.keys(dados).forEach(mes => {
+
+            meses.forEach(mes => {
                 const section = document.createElement('div');
                 section.classList.add('mes-section');
                 section.style.display = 'none';
                 sections[mes] = section;
-        
+
                 const titulo = document.createElement('div');
                 titulo.classList.add('mes-titulo');
                 titulo.innerText = mes;
-        
+                titulo.style.fontSize = '1.4rem';
+                titulo.style.marginBottom = '10px';
+                titulo.style.textAlign = 'center';
+
                 const itemsContainer = document.createElement('div');
                 itemsContainer.classList.add('itens-container');
                 itemsContainer.style.display = 'block';
-        
+
                 let totalMes = 0;
                 let saldosPorCategoria = {};
-        
+
                 dados[mes].forEach((item, index) => {
                     const linha = document.createElement('div');
                     linha.classList.add('item');
+                    linha.style.border = '1px solid rgba(255,255,255,0.1)';
+                    linha.style.background = 'var(--card)';
+                    linha.style.padding = '10px';
+                    linha.style.borderRadius = '10px';
+                    linha.style.marginBottom = '8px';
+                    linha.style.display = 'flex';
+                    linha.style.justifyContent = 'space-between';
+                    linha.style.alignItems = 'center';
                     linha.innerHTML = `
-                        <div style="display: flex; flex: 1; align-items: center; justify-content: space-between; margin-right: 10px;">
-                            <span>${item.descricao} ${item.tipo === 'despesa' ? `(${item.categoria || 'Não especificada'})` : ''}</span>
-                            <span class="${item.tipo === 'receita' ? 'positivo' : 'negativo'}">
-                                ${item.tipo === 'receita' ? '+' : '-'} R$ ${item.valor.toFixed(2)}
-                            </span>
-                        </div>
-                        <div>
-                            <button style="margin-right: 10px;" onclick="editarItem('${mes}', ${index})">✏️</button>
-                            <button onclick="removerItem('${mes}', ${index})">🗑️</button>
-                        </div>
-                    `;
-                    linha.style.display = "flex";
-                    linha.style.alignItems = "center";
-                    linha.style.justifyContent = "space-between";
-                    linha.querySelector("div").style.display = "flex";
-        
+                <div style="display: flex; flex-direction: column;">
+                    <span style="font-weight: bold;">${item.descricao} ${item.tipo === 'despesa' ? `(${item.categoria || 'Não especificada'})` : ''}</span>
+                    <span class="${item.tipo === 'receita' ? 'positivo' : 'negativo'}" style="font-weight: bold;">
+                        ${item.tipo === 'receita' ? '+' : '-'} R$ ${item.valor.toFixed(2)}
+                    </span>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button onclick="editarItem('${mes}', ${index})" style="padding:6px 10px; border-radius:6px; background:var(--primary); color:white; border:none;">Editar</button>
+                    <button onclick="removerItem('${mes}', ${index})" style="padding:6px 10px; border-radius:6px; background:var(--danger); color:white; border:none;">Excluir</button>
+                </div>
+            `;
+
                     itemsContainer.appendChild(linha);
-        
+
                     totalMes += item.tipo === 'receita' ? item.valor : -item.valor;
-        
                     if (item.tipo === 'receita') totalReceita += item.valor;
                     if (item.tipo === 'despesa') totalDespesa += item.valor;
-        
+
                     if (item.tipo === 'despesa') {
                         const nomeCategoria = item.categoria || 'Não especificada';
                         if (!saldosPorCategoria[nomeCategoria]) {
@@ -467,69 +592,77 @@
                         saldosPorCategoria[nomeCategoria] += item.valor;
                     }
                 });
-        
+
                 section.appendChild(titulo);
                 section.appendChild(itemsContainer);
-        
-                // Adicionando saldo por categoria (antes do resumo!)
+
                 const categoriasContainer = document.createElement('div');
                 categoriasContainer.classList.add('categorias-container');
                 categoriasContainer.style.marginTop = '15px';
-                categoriasContainer.style.marginBottom = '15px';
                 categoriasContainer.style.textAlign = 'center';
-        
+
                 if (Object.keys(saldosPorCategoria).length > 0) {
                     const tituloCategorias = document.createElement('p');
                     tituloCategorias.innerHTML = '<strong>Total por Categoria:</strong>';
                     categoriasContainer.appendChild(tituloCategorias);
-        
+
                     for (let nomeCategoria in saldosPorCategoria) {
                         const divCategoria = document.createElement('div');
                         divCategoria.classList.add('categoria');
-                        divCategoria.innerHTML = `
-                            <p>${nomeCategoria}: R$ ${saldosPorCategoria[nomeCategoria].toFixed(2)}</p>`;
+                        divCategoria.style.padding = '6px 0';
+                        divCategoria.innerHTML = `<p>${nomeCategoria}: R$ ${saldosPorCategoria[nomeCategoria].toFixed(2)}</p>`;
                         categoriasContainer.appendChild(divCategoria);
                     }
-        
+
                     section.appendChild(categoriasContainer);
                 }
-        
-                // Resumo do saldo do mês
+
                 const resumo = document.createElement('div');
                 resumo.classList.add('resumo');
                 resumo.innerHTML = `
-                    <p><strong>Saldo de ${mes}:</strong> 
-                    <span class="${totalMes >= 0 ? 'positivo' : 'negativo'}">R$ ${totalMes.toFixed(2)}</span></p>`;
-                resumo.style.justifyContent = "center";
-                resumo.style.alignItems = "center";
+            <p><strong>Saldo de ${mes}:</strong> 
+            <span class="${totalMes >= 0 ? 'positivo' : 'negativo'}">R$ ${totalMes.toFixed(2)}</span></p>`;
                 resumo.style.textAlign = "center";
-                resumo.style.fontSize = "20px";
+                resumo.style.fontSize = "18px";
+                resumo.style.padding = "10px 0";
+
                 section.appendChild(resumo);
-        
+
                 saldosMes.push(totalMes);
                 labels.push(mes);
-        
                 totalGeral += totalMes;
-        
+
                 container.appendChild(section);
             });
-        
+
             if (totalGeralSpan) {
                 totalGeralSpan.innerText = `R$ ${totalGeral.toFixed(2)}`;
             }
-        
+
             if (typeof atualizarGraficos === "function") {
                 atualizarGraficos(labels, saldosMes, totalReceita, totalDespesa);
             }
         }
-        
+
+        /*
+        GRAFICOS
+        */
         function atualizarGraficos(labels, saldos, receitas, despesas) {
+            const temaEscuroAtivo = document.body.classList.contains('dark');
+            const elementoParaLer = temaEscuroAtivo ? document.body : document.documentElement;
+            const rootStyles = getComputedStyle(elementoParaLer);
+
+            const corTexto = rootStyles.getPropertyValue('--text').trim();
+            const corSucesso = rootStyles.getPropertyValue('--success').trim();
+            const corPerigo = rootStyles.getPropertyValue('--danger').trim();
+            const corBorda = rootStyles.getPropertyValue('--border').trim();
+
             const ctxBarra = document.getElementById('graficoBarras').getContext('2d');
             const ctxPizza = document.getElementById('graficoPizza').getContext('2d');
-        
+
             if (graficoBarras) graficoBarras.destroy();
             if (graficoPizza) graficoPizza.destroy();
-        
+
             graficoBarras = new Chart(ctxBarra, {
                 type: 'bar',
                 data: {
@@ -537,55 +670,274 @@
                     datasets: [{
                         label: 'Saldo por Mês',
                         data: saldos,
-                        backgroundColor: saldos.map(v => v >= 0 ? '#2ecc71' : '#e74c3c')
+                        backgroundColor: saldos.map(v => v >= 0 ? corSucesso : corPerigo)
                     }]
                 },
                 options: {
                     responsive: true,
                     plugins: {
-                        legend: { labels: { color: 'white' } }
+                        legend: { labels: { color: corTexto } }
                     },
                     scales: {
-                        x: { ticks: { color: 'white' } },
-                        y: { ticks: { color: 'white' } }
+                        x: { ticks: { color: corTexto }, grid: { color: corBorda } },
+                        y: { ticks: { color: corTexto }, grid: { color: corBorda } }
                     }
                 }
             });
-        
+
             graficoPizza = new Chart(ctxPizza, {
                 type: 'pie',
                 data: {
                     labels: ['Receitas', 'Despesas'],
                     datasets: [{
                         data: [receitas, despesas],
-                        backgroundColor: ['#2ecc71', '#e74c3c']
+                        backgroundColor: [corSucesso, corPerigo]
                     }]
                 },
                 options: {
                     plugins: {
-                        legend: { labels: { color: 'white' } }
+                        legend: { labels: { color: corTexto } }
                     }
                 }
             });
         }
-        
+
         function toggleMes(mesSelecionado) {
-    const secoes = document.querySelectorAll('.mes-section');
-    secoes.forEach(secao => {
-        secao.style.display = 'none';
-    });
+            const secoes = document.querySelectorAll('.mes-section');
+            secoes.forEach(secao => {
+                secao.style.display = 'none';
+            });
 
-    const secaoSelecionada = document.querySelector(`.mes-section:nth-child(${Object.keys(dados).indexOf(mesSelecionado) + 2})`);
-    if (secaoSelecionada) {
-        secaoSelecionada.style.display = 'block';
-        secaoSelecionada.scrollIntoView({ behavior: 'smooth' });
-    }
-}
+            const secaoSelecionada = document.querySelector(`.mes-section:nth-child(${Object.keys(dados).indexOf(mesSelecionado) + 2})`);
+            if (secaoSelecionada) {
+                secaoSelecionada.style.display = 'block';
+                secaoSelecionada.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
         renderizar();
-        </script>
-    
-    
+        /*
+        SECAO (mostrarSecao)
+        */
+        function mostrarSecao(idSecao) {
+            const secoes = document.querySelectorAll('.secao');
+            secoes.forEach(secao => {
+                secao.style.display = 'none';
+            });
 
+            const secaoAtiva = document.getElementById(idSecao);
+            if (secaoAtiva) {
+                secaoAtiva.style.display = 'block';
+                secaoAtiva.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // Destacar botão ativo no menu lateral
+            const botoes = document.querySelectorAll('.sb-item');
+            botoes.forEach(botao => {
+                if (botao.getAttribute('data-target') === idSecao) {
+                    botao.classList.add('ativo');
+                } else {
+                    botao.classList.remove('ativo');
+                }
+            });
+        }
+        /*
+        Welcome Screen     
+        */
+        let fzWelcome_slideAtual = 0;
+
+        function fzWelcome_iniciar() {
+            const container = document.getElementById('fz-welcomeScreen-container');
+            const slides = container.querySelector('.fz-welcomeScreen-slides');
+            const totalSlides = slides.children.length;
+            const indicadores = document.getElementById('fz-welcomeScreen-indicators');
+
+            indicadores.innerHTML = '';
+            for (let i = 0; i < totalSlides; i++) {
+                const bolinha = document.createElement('span');
+                if (i === 0) bolinha.classList.add('ativo');
+                indicadores.appendChild(bolinha);
+            }
+
+            fzWelcome_atualizar();
+
+            container.addEventListener('touchstart', handleTouchStart, false);
+            container.addEventListener('touchmove', handleTouchMove, false);
+
+            let xInicial = null;
+
+            function handleTouchStart(evt) {
+                xInicial = evt.touches[0].clientX;
+            }
+
+            function handleTouchMove(evt) {
+                if (!xInicial) return;
+                let xAtual = evt.touches[0].clientX;
+                let diffX = xInicial - xAtual;
+
+                if (diffX > 50 && fzWelcome_slideAtual < totalSlides - 1) {
+                    fzWelcome_slideAtual++;
+                    fzWelcome_atualizar();
+                } else if (diffX < -50 && fzWelcome_slideAtual > 0) {
+                    fzWelcome_slideAtual--;
+                    fzWelcome_atualizar();
+                }
+                xInicial = null;
+            }
+        }
+
+        function fzWelcome_navegarSlide(direcao) {
+            const totalSlides = document.querySelector('.fz-welcomeScreen-slides').children.length;
+            fzWelcome_slideAtual += direcao;
+            if (fzWelcome_slideAtual < 0) fzWelcome_slideAtual = 0;
+            fzWelcome_atualizar();
+        }
+
+        function fzWelcome_atualizar() {
+            const slides = document.querySelector('.fz-welcomeScreen-slides');
+            const totalSlides = slides.children.length;
+            const indicadores = document.querySelectorAll('#fz-welcomeScreen-indicators span');
+            const btnNext = document.getElementById('fz-welcomeScreen-btnNext');
+            const btnStart = document.getElementById('fz-welcomeScreen-btnStart');
+
+            slides.style.transform = `translateX(-${fzWelcome_slideAtual * 100}vw)`;
+
+            indicadores.forEach((b, i) => {
+                b.classList.toggle('ativo', i === fzWelcome_slideAtual);
+            });
+
+            btnNext.style.display = fzWelcome_slideAtual === totalSlides - 1 ? 'none' : 'inline-block';
+            btnStart.style.display = fzWelcome_slideAtual === totalSlides - 1 ? 'inline-block' : 'none';
+
+            // Anima os itens do slide atual com delay
+            const slideAtualElement = slides.children[fzWelcome_slideAtual];
+            const itens = slideAtualElement.querySelectorAll('.fz-fade-in');
+            itens.forEach((item, index) => {
+                item.classList.remove('show'); // reseta antes
+                setTimeout(() => {
+                    item.classList.add('show');
+                }, index * 150); // delay entre elementos
+            });
+        }
+
+        function fzWelcome_fechar() {
+            const nomeUsuario = document.getElementById('fz-nomeUsuario').value.trim();
+            if (!nomeUsuario) {
+                mostrarPopup("Por favor, preencha seu nome.");
+                return;
+            }
+            localStorage.setItem('fz-nomeUsuario', nomeUsuario);
+            document.getElementById('fz-welcomeScreen-container').style.display = 'none';
+            localStorage.setItem('fz-welcomeScreen-finalizado', 'true');
+
+            // Atualiza o nome exibido na tela inicial imediatamente
+            const nomeSpan = document.getElementById('nomeUsuarioDisplay');
+            if (nomeSpan) {
+                nomeSpan.textContent = nomeUsuario;
+            }
+        }
+        window.addEventListener('load', () => {
+            const jaViu = localStorage.getItem('fz-welcomeScreen-finalizado');
+            if (!jaViu) {
+                fzWelcome_iniciar();
+            } else {
+                document.getElementById('fz-welcomeScreen-container').style.display = 'none';
+            }
+
+            // Aqui você pega o nome salvo e atualiza o texto da tela inicial
+            const nomeUsuario = localStorage.getItem('fz-nomeUsuario') || 'Usuário';
+            const nomeSpan = document.getElementById('nomeUsuarioDisplay');
+            if (nomeSpan) {
+                nomeSpan.textContent = nomeUsuario;
+            }
+        });
+
+
+        function atualizarDashboard() {
+            const ctxBarra = document.getElementById('graficoBarrasDashboard').getContext('2d');
+            const ctxPizza = document.getElementById('graficoPizzaDashboard').getContext('2d');
+
+            const temaEscuroAtivo = document.body.classList.contains('dark');
+            const elementoParaLer = temaEscuroAtivo ? document.body : document.documentElement;
+            const rootStyles = getComputedStyle(elementoParaLer);
+
+            const corTexto = rootStyles.getPropertyValue('--text').trim();
+            const corSucesso = rootStyles.getPropertyValue('--success').trim();
+            const corPerigo = rootStyles.getPropertyValue('--danger').trim();
+            const corBorda = rootStyles.getPropertyValue('--border').trim();
+
+            // Destrói os gráficos existentes, se existirem e forem válidos
+            if (window.graficoBarrasDashboard && typeof window.graficoBarrasDashboard.destroy === 'function') {
+                window.graficoBarrasDashboard.destroy();
+            }
+            if (window.graficoPizzaDashboard && typeof window.graficoPizzaDashboard.destroy === 'function') {
+                window.graficoPizzaDashboard.destroy();
+            }
+
+            // Dados para o gráfico - adapte conforme seu contexto
+            const meses = Object.keys(dados);
+            const saldos = meses.map(mes => {
+                return dados[mes].reduce((acc, item) => {
+                    return acc + (item.tipo === 'receita' ? item.valor : -item.valor);
+                }, 0);
+            });
+
+            let totalReceitas = 0;
+            let totalDespesas = 0;
+            meses.forEach(mes => {
+                dados[mes].forEach(item => {
+                    if (item.tipo === 'receita') totalReceitas += item.valor;
+                    else if (item.tipo === 'despesa') totalDespesas += item.valor;
+                });
+            });
+
+2
+            window.graficoBarrasDashboard = new Chart(ctxBarra, {
+                type: 'bar',
+                data: {
+                    labels: meses,
+                    datasets: [{
+                        label: 'Saldo por Mês',
+                        data: saldos,
+                        backgroundColor: saldos.map(v => v >= 0 ? corSucesso : corPerigo)
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { labels: { color: corTexto } }
+                    },
+                    scales: {
+                        x: { ticks: { color: corTexto }, grid: { color: corBorda } },
+                        y: { ticks: { color: corTexto }, grid: { color: corBorda } }
+                    }
+                }
+            });
+
+            window.graficoPizzaDashboard = new Chart(ctxPizza, {
+                type: 'pie',
+                data: {
+                    labels: ['Receitas', 'Despesas'],
+                    datasets: [{
+                        data: [totalReceitas, totalDespesas],
+                        backgroundColor: [corSucesso, corPerigo]
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: { labels: { color: corTexto } }
+                    }
+                }
+            });
+        }
+
+        window.onload = () => {
+            mostrarSecao('inicio');
+            aplicarTemaSalvo();
+            renderizar();
+            atualizarDashboard();
+        };
+
+    </script>
 
 </body>
 
