@@ -31,6 +31,46 @@
             --danger: #ff0000;
         }
     </style>
+    <!-- Firebase App (obrigatório) -->
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
+    <!-- Firebase Database -->
+    <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-database-compat.js"></script>
+
+    <script>
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAx5RSYmkJPaqtyieFb1HM21Md3IK0UnMI",
+            authDomain: "finanzeweb-11751.firebaseapp.com",
+            projectId: "finanzeweb-11751",
+            storageBucket: "finanzeweb-11751.firebasestorage.app",
+            messagingSenderId: "510357031303",
+            appId: "1:510357031303:web:84297312dda27948282b22",
+            measurementId: "G-H3T6V2ZKH4",
+            databaseURL: "https://finanzeweb-11751-default-rtdb.firebaseio.com" // obrigatório para Realtime Database
+        };
+
+        // Inicializa o Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Inicializa o Database
+        const database = firebase.database();
+
+        // Exemplo: ler dados
+        database.ref("/").once("value").then(snapshot => {
+            console.log(snapshot.val());
+        });
+    </script>
+    <script>
+        function salvarDados() {
+            // Salva no localStorage
+            localStorage.setItem("dadosFinanceiros", JSON.stringify(dados));
+
+            // Salva no Firebase
+            firebase.database().ref('usuarios/usuario1/dadosFinanceiros').set(dados)
+                .then(() => console.log("Dados enviados para Firebase!"))
+                .catch((erro) => console.error("Erro ao salvar no Firebase:", erro));
+        }
+    </script>
 </head>
 
 <body>
@@ -196,6 +236,7 @@
                 <option value="Novembro">Novembro</option>
                 <option value="Dezembro">Dezembro</option>
             </select>
+                        <input type="number" id="parcelas" placeholder="Parcelas (opcional)" min="1" />
             <button onclick="adicionar()">Adicionar</button>
         </div>
     </div>
@@ -271,6 +312,7 @@
                 <option value="Assinaturas">Assinaturas</option>
                 <option value="Roupas">Roupas</option>
             </select>
+
             <div style="display:flex; gap:10px; justify-content:flex-end;">
                 <button onclick="fecharModalEdicao()" style="background:gray;">Cancelar</button>
                 <button onclick="salvarEdicao()" style="background:var(--primary);">Salvar</button>
@@ -287,7 +329,27 @@
             mostrarSecao('inicio'); // Exibe a aba padrão ao carregar
         };
 
-        const dados = JSON.parse(localStorage.getItem("dadosFinanceiros")) || {};
+        let dados = {}; // inicial vazio
+
+        // Tenta buscar os dados do Firebase
+        firebase.database().ref('usuarios/usuario1/dadosFinanceiros').get()
+            .then((snapshot) => {
+                if (snapshot.exists()) {
+                    dados = snapshot.val(); // pega os dados do Firebase
+                } else {
+                    console.log("Nenhum dado encontrado no Firebase, usando localStorage...");
+                    dados = JSON.parse(localStorage.getItem("dadosFinanceiros")) || {};
+                }
+                renderizar();
+                atualizarDashboard();
+            })
+            .catch((erro) => {
+                console.error("Erro ao ler dados do Firebase:", erro);
+                dados = JSON.parse(localStorage.getItem("dadosFinanceiros")) || {};
+                renderizar();
+                atualizarDashboard();
+            });
+
         let graficoBarras, graficoPizza;
         /*
         Tema White/Dark   
@@ -356,38 +418,49 @@
             const descricao = document.getElementById('descricao').value.trim();
             const valor = parseFloat(document.getElementById('valor').value);
             const tipo = document.getElementById('tipo').value;
-            const mes = document.getElementById('mes').value;
+            const mesInicial = document.getElementById('mes').value;
             const categoria = tipo === 'despesa' ? document.getElementById('categoria').value : '';
+
+            // Novo campo: quantidade de parcelas (opcional)
+            const qtdParcelas = parseInt(document.getElementById('parcelas')?.value) || 1;
 
             if (!descricao || isNaN(valor) || valor <= 0) {
                 mostrarPopup("Preencha todos os campos corretamente.");
                 return;
             }
 
-            if (!dados[mes]) dados[mes] = [];
-
-            const item = { descricao, valor, tipo };
             if (tipo === 'despesa' && !categoria) {
                 mostrarPopup("Escolha uma categoria para a despesa.");
                 return;
             }
-            if (tipo === 'despesa') item.categoria = categoria;
 
-            dados[mes].push(item);
+            // Lista de meses em ordem
+            const mesesDoAno = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+            let indiceMes = mesesDoAno.indexOf(mesInicial);
+
+            for (let i = 0; i < qtdParcelas; i++) {
+                const mesAtual = mesesDoAno[indiceMes % 12]; // reinicia após Dezembro
+                if (!dados[mesAtual]) dados[mesAtual] = [];
+
+                const item = { descricao, valor, tipo };
+                if (tipo === 'despesa') item.categoria = categoria;
+
+                dados[mesAtual].push(item);
+
+                indiceMes++; // passa para o próximo mês
+            }
+
+            // Limpar campos
             document.getElementById('descricao').value = '';
             document.getElementById('valor').value = '';
             document.getElementById('categoria').value = '';
+            if (document.getElementById('parcelas')) document.getElementById('parcelas').value = '';
+
             salvarDados();
             renderizar();
-
             mostrarPopup(`Item de ${tipo === 'receita' ? 'Receita' : 'Despesa'} adicionado com sucesso!`);
         }
-        /*
-        LOCALSTORAGE (dadosFinanceiros)
-        */
-        function salvarDados() {
-            localStorage.setItem("dadosFinanceiros", JSON.stringify(dados));
-        }
+
         /*
         EDITAR/REMOVER ITEM
         */
@@ -890,7 +963,7 @@
                 });
             });
 
-2
+            2
             window.graficoBarrasDashboard = new Chart(ctxBarra, {
                 type: 'bar',
                 data: {
